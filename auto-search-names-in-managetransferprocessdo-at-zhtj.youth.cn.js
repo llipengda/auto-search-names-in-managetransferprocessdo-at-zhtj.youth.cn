@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         智慧团建组织关系审批自动搜索 auto-search-names-in-managetransferprocessdo-at-zhtj.youth.cn
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  在智慧团建网站的组织关系审批页面中自动完成姓名搜索和数据收集
 // @author       PDLi
-// @match        https://zhtj.youth.cn/zhtj/center/manage/managetransferprocessdo
+// @match        https://zhtj.youth.cn/*
 // @icon         https://zhtj.youth.cn/zhtj/static/img/web_logo.png
 // @license      MIT
 // ==/UserScript==
@@ -28,6 +28,10 @@
   }
 
   function createWindow() {
+    const floatWindowWithButton = document.createElement('div')
+    floatWindowWithButton.id = 'float-window-with-button'
+    floatWindowWithButton.style.display = 'none'
+
     const floatWindow = document.createElement('div')
     floatWindow.style.width = '300px'
     floatWindow.style.height = '500px'
@@ -229,8 +233,9 @@
     floatWindowTextContainer.appendChild(exportButtonsGrid)
     floatWindowInner.appendChild(floatWindowTextContainer)
     floatWindow.appendChild(floatWindowInner)
-    document.body.appendChild(floatWindow)
-    document.body.appendChild(minButton)
+    floatWindowWithButton.appendChild(floatWindow)
+    floatWindowWithButton.appendChild(minButton)
+    document.body.appendChild(floatWindowWithButton)
 
     function displayResult() {
       switch (formatSelector.value) {
@@ -311,4 +316,14 @@
   }
 
   createWindow()
+
+  setInterval(() => {
+    const url = window.location.href
+    if (url === 'https://zhtj.youth.cn/zhtj/center/manage/managetransferprocessdo') {
+      document.getElementById('float-window-with-button').style.display = 'block'
+    } else {
+      document.getElementById('float-window-with-button').style.display = 'none'
+    }
+  }
+  ,500)
 })()
